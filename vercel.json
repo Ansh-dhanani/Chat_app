@@ -16,16 +16,14 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/backend/src/server.js"
+      "dest": "backend/src/server.js"
     },
     {
-      "src": "/(.*\\.(js|css|ico|png|jpg|jpeg|gif|svg|webp|woff|woff2|ttf|eot))",
-      "headers": { "cache-control": "max-age=31536000" },
-      "dest": "/$1"
+      "handle": "filesystem"
     },
     {
       "src": "/(.*)",
-      "dest": "/index.html"
+      "dest": "frontend/dist/index.html"
     }
   ]
 }
