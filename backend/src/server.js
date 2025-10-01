@@ -16,15 +16,17 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messagesRoutes);
 
-// Serve static files from frontend build
+// Only handle API routes in production
 if (!process.env.VERCEL) {
     // In local development, serve the built frontend
-    const frontendPath = path.join(__dirname, "..", "frontend", "dist");
+    const frontendPath = path.join(__dirname, "..", "..", "frontend", "dist");
     app.use(express.static(frontendPath));
     
     // Handle React Router - serve index.html for non-API routes
-    app.get("/*splat", (req, res) => {
-        res.sendFile(path.join(frontendPath, "index.html"));
+    app.get("*", (req, res) => {
+        if (!req.path.startsWith('/api/')) {
+            res.sendFile(path.join(frontendPath, "index.html"));
+        }
     });
 }
 
