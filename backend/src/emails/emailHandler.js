@@ -11,11 +11,15 @@ export const sendWelcomeEmail = async (email, name, clientURL) => {
             html: createEmailTemplate(name, clientURL)
         });
 
+        let timeoutId;
         const timeoutPromise = new Promise((_, reject) => {
-            setTimeout(() => reject(new Error("Email send timeout")), 10000); // 10 second timeout
+            timeoutId = setTimeout(() => reject(new Error("Email send timeout")), 10000);
         });
 
-        const { data, error } = await Promise.race([emailPromise, timeoutPromise]);
+        const { data, error } = await Promise.race([
+            emailPromise.finally(() => clearTimeout(timeoutId)),
+            timeoutPromise
+        ]);
         
         if (error) {
             console.error("Error sending welcome email:", error);
