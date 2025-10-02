@@ -3,12 +3,19 @@ import { createEmailTemplate } from "../emails/emailTemaplate.js";
 
 export const sendWelcomeEmail = async (email, name, clientURL) => {
     try {
-        const { data, error } = await resultClient.emails.send({
+        // Add a timeout to prevent hanging
+        const emailPromise = resultClient.emails.send({
             from: `${sender.name} <${sender.email}>`,
             to: email,
             subject: "Welcome to Chat App",
             html: createEmailTemplate(name, clientURL)
         });
+
+        const timeoutPromise = new Promise((_, reject) => {
+            setTimeout(() => reject(new Error("Email send timeout")), 10000); // 10 second timeout
+        });
+
+        const { data, error } = await Promise.race([emailPromise, timeoutPromise]);
         
         if (error) {
             console.error("Error sending welcome email:", error);
