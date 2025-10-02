@@ -3,7 +3,7 @@ import cloudinary from "../lib/cloudinary.js";
 import { generateToken } from "../lib/utils.js";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
-import "dotenv/config";
+
 
 export const signup = async (req, res) => {
   console.log("Signup endpoint hit");
@@ -123,7 +123,7 @@ export const updateProfile = async (req, res) => {
       return res.status(400).json({ message: "Profile pic is required" });
 
     const userId = res.user._id;
-    const uploadres = await cloudinary.uploader.upload(profilePic);
+    const uploadRes = await cloudinary.uploader.upload(profilePic);
 
     const updatedUser = await User.findByIdAndUpdate(
       userId,
@@ -131,7 +131,7 @@ export const updateProfile = async (req, res) => {
       { new: true }
     );
     if (!updatedUser) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(401).json({ message: "Unauthorized - User not found" });
     }
     res.status(200).json(updatedUser);
   } catch (error) {
