@@ -141,3 +141,13 @@ body {
 .chat-container button:hover {
   background: rgba(255, 255, 255, 0.2);
 }
+.error-message {
+  padding: 12px;
+  background: rgba(220, 38, 38, 0.1);
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  border-radius: 8px;
+  color: #fca5a5;
+  font-size: 14px;
+  text-align: left;
+  margin-bottom: 8px;
+}

@@ -11,16 +11,14 @@ const app = express();
 const __dirname = path.resolve();
 const PORT = process.env.PORT || 5000;
 
-// Connect to database
-connectDB();
-
 // Essential middleware
-app.use(express.json({ limit: "50mb" }));
+app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());
 
 // API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messagesRoutes);
+
 
 // Basic health check
 app.get("/api/health", (req, res) => {
@@ -49,13 +47,17 @@ app.use((err, req, res, next) => {
 });
 
 // Start server (only in non-Vercel environment)
-if (!process.env.VERCEL) {
+
+(async ()=>{
+    await connectDB();
+    if (!process.env.VERCEL) {
     app.listen(PORT, () => {
         console.log(`🚀 Server running on port ${PORT}`);
         console.log(`📱 Frontend served at: http://localhost:${PORT}`);
         console.log(`🔗 API available at: http://localhost:${PORT}/api`);
         console.log(`📱 Environment: ${process.env.NODE_ENV || 'development'}`);
     });
-}
+    }
+})();
 
 export default app;
