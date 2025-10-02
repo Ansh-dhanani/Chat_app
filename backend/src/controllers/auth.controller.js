@@ -125,12 +125,15 @@ export const updateProfile = async (req, res) => {
     const userId = res.user._id;
     const uploadres = await cloudinary.uploader.upload(profilePic);
 
-    const updatesUser = await User.findById(
+    const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { profilePic: uploadres.secure_url },
+      { $set: { profilePic: uploadRes.secure_url } },
       { new: true }
     );
-    res.status(200).json({updatesUser});
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json(updatedUser);
   } catch (error) {
     console.log("Error in Update Profile",error);
     res.status(500).json({message:"Internal Server Error"});
