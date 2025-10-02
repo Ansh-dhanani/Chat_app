@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 import "dotenv/config";
 
 export const signup = async (req ,res)=>{
-    console.log("Signup endpoint hit", req.body);
+    console.log("Signup endpoint hit");
 
     const {fullname ,email,password}=req.body;
     
@@ -104,7 +104,11 @@ export const login = async (req, res) => {
     }
 };
 
-export const logout = async (_,res)=>{
-    res.cookie('jwt',"",{maxAge:0});
-    res.status(200).json({message:"Logout Secessfully"});
-}
+export const logout = async (_, res) => {
+    res.clearCookie("jwt", {
+        httpOnly: true,
+        sameSite: "strict",
+        secure: process.env.NODE_ENV === "development" ? false : true,
+    });
+    res.status(200).json({ message: "Logout Successfully" });
+};
