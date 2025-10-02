@@ -5,9 +5,15 @@ import { protectRoute } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
-// Apply auth rate limiter to login and signup routes
-router.post("/signup", authLimiter, signup);
-router.post("/login", authLimiter, login);
+// Apply auth rate limiter to all routes
+router.use(authLimiter);
+
+
+router.get("/test",(req,res)=>{
+    res.status(200).json({message:"Test Route"});
+})
+router.post("/signup", signup);
+router.post("/login", login);
 router.post("/logout", logout);
 
 router.put("/update-profile",protectRoute,updateProfile)
