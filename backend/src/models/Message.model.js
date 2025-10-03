@@ -7,7 +7,7 @@ const messageSchema =new mongoose.Schema(
             ref:"User",
             required:true,
         },
-        receivedId:{
+        receiverId:{
             type:mongoose.Schema.Types.ObjectId,
             ref:"User",
             required:true,
@@ -20,7 +20,15 @@ const messageSchema =new mongoose.Schema(
         },
     },
     { timestamps:true }
-)
+);
+
+messageSchema.pre('validate', function(next) {
+    if (!this.text && !this.image) {
+        next(new Error('Message must contain either text or image'));
+    } else {
+        next();
+    }
+});
 
 const Message = mongoose.model("Message",messageSchema);
 
