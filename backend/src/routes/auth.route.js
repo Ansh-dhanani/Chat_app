@@ -1,12 +1,12 @@
 import express from "express";
 import { signup, login, logout, updateProfile } from "../controllers/auth.controller.js";
-import { authLimiter } from "../middlewares/ratelimit.middleware.js";
+import { rateLimiter } from "../middlewares/ratelimit.middleware.js";
 import { protectRoute } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
 // Apply auth rate limiter to all routes
-router.use(authLimiter);
+router.use(rateLimiter);
 
 
 router.get("/test",(req,res)=>{
