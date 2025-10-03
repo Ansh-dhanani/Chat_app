@@ -1,127 +1,45 @@
-import { useState } from 'react'
-import './App.css'
+import React from 'react'
+import { Route, Routes } from 'react-router';
+import { ChatPage } from './pages/ChatPage';
+import { LoginPage } from './pages/LoginPage';
+import { SignUpPage } from './pages/SignUpPage';
+import { useAuthStore } from './store/useAuthStore';
 
 function App() {
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(false)
-  const [formData, setFormData] = useState({
-    fullname: '',
-    email: '',
-    password: ''
-  })
-  const [isLogin, setIsLogin] = useState(true)
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    
-    try {
-      const endpoint = isLogin ? 'login' : 'signup'
-      const body = isLogin 
-        ? { email: formData.email, password: formData.password }
-        : formData
-
-      const response = await fetch(`/api/auth/${endpoint}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(body)
-      })
-
-      const data = await response.json()
-      
-      if (response.ok) {
-        setUser(data)
-        setFormData({ fullname: '', email: '', password: '' })
-      } else {
-        alert(data.message)
-      }
-    } catch (error) {
-      console.error('Error:', error)
-      alert('Something went wrong!')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    })
-  }
-
-  if (user) {
-    return (
-      <div className="app">
-        <div className="chat-container">
-          <h1>Welcome to Chat App, {user.fullname}! 🎉</h1>
-          <p>Your account: {user.email}</p>
-          <p>Chat functionality will be implemented next...</p>
-          <button onClick={() => setUser(null)}>Logout</button>
-        </div>
-      </div>
-    )
-  }
-
+  const {authUser,login,isLoggedIn} = useAuthStore();
+  console.log("auth user: ",authUser);
+  console.log("isLoggedIn",isLoggedIn);
+  
   return (
-    <div className="app">
-      <div className="auth-container">
-        <h1>💬 Chat App</h1>
-        <p>Connect • Chat • Share</p>
-        
-        <form onSubmit={handleSubmit} className="auth-form">
-          <h2>{isLogin ? 'Login' : 'Sign Up'}</h2>
-          
-          {!isLogin && (
-            <input
-              type="text"
-              name="fullname"
-              placeholder="Full Name"
-              value={formData.fullname}
-              onChange={handleChange}
-              required
-            />
-          )}
-          
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-          
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-          
-          <button type="submit" disabled={loading}>
-            {loading ? 'Loading...' : (isLogin ? 'Login' : 'Sign Up')}
-          </button>
-        </form>
-        
-        <p>
-          {isLogin ? "Don't have an account? " : "Already have an account? "}
-          <button 
-            type="button" 
-            onClick={() => setIsLogin(!isLogin)}
-            className="link-button"
-          >
-            {isLogin ? 'Sign Up' : 'Login'}
-          </button>
-        </p>
+    <>
+      <div className="absolute w-full h-screen z-[-1] ">
+        <div
+          className="absolute inset-0  bg-gradient-to-br from-stone-200 via-pink-500 to-black"
+          style={{
+            backgroundImage: `
+            linear-gradient(to bottom right, 
+              #e7e5e4 0%, 
+              #f5d0fe 1%,
+              #ec4899 30%,
+              #dc2626 50%,
+              #7f1d1d 70%,
+              #000000 100%
+            ),
+            url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='3.5' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.35'/%3E%3C/svg%3E")
+          `,
+            backgroundBlendMode: "overlay",
+          }}
+        >
+           <button onClick={login}> button</button>
       </div>
-    </div>
+      <Routes>
+        <Route path="/" element={<ChatPage/>}/>
+        <Route path='/login' element={<LoginPage/>}/>
+        <Route path="/signup" element={<SignUpPage/>}/>
+      </Routes>
+      </div>
+    </>
   )
 }
 
-export default App
+export default App;
