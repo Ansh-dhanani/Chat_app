@@ -1,6 +1,5 @@
 import express from "express";
 import dotenv from "dotenv";
-import "dotenv/config"
 import path from "path";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.route.js";
@@ -30,6 +29,8 @@ app.get("/api/health", (req, res) => {
 if (!process.env.VERCEL) {
     // Path to frontend dist folder
     const frontendPath = path.join(__dirname, "..", "frontend", "dist");
+    
+    // Serve static files first
     app.use(express.static(frontendPath));
     
     // Handle React Router - serve index.html for all non-API routes
@@ -37,7 +38,11 @@ if (!process.env.VERCEL) {
         if (req.path.startsWith('/api/')) {
             return next();
         }
-        res.sendFile(path.join(frontendPath, "index.html"));
+        res.sendFile(path.join(frontendPath, "index.html"), (err) => {
+            if (err) {
+                res.status(404).json({ message: "Frontend not available" });
+            }
+        });
     });
 }
 
