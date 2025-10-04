@@ -16,7 +16,7 @@ export const protectRoute = async (req, res, next) => {
     req.user = user;
     next();     
   } catch (error) {
-    logger.error("ERROR in ProtectRoute middleware",{ error:error.message,stack:error.stack });
+    console.log("ERROR in ProtectRoute middleware:", error.message);
     if (error.name === "JsonWebTokenError" || error.name === "TokenExpiredError") {
       return res.status(401).json({ message: "Unauthorized - Invalid token" });
     }
