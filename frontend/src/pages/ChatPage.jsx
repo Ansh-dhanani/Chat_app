@@ -6,8 +6,7 @@ export const ChatPage = () => {
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (message.trim()) {
-      // Handle send message logic here
-      console.log("Sending message:", message);
+      // TODO: Implement actual message sending logic
       setMessage("");
     }
   };

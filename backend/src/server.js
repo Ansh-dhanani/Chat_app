@@ -12,9 +12,17 @@ const app = express();
 const __dirname = path.resolve();
 const PORT = process.env.PORT || 5000;
 
+// Validate required environment variables
+if (!process.env.CLIENT_URL) {
+  console.error("❌ CLIENT_URL environment variable is not defined");
+  process.exit(1);
+}
+
+// CORS middleware (must be early for preflight requests)
+app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
+
 // Essential middleware
 app.use(express.json({ limit: "10mb" }));
-app.use(cors({origin:process.env.CLIENT_URL,credentials:true}))
 app.use(cookieParser());
 
 // API Routes

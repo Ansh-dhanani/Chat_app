@@ -6,6 +6,7 @@ export const useAuthStore = create((set)=>({
     authUser : null,
     isCheckingAuth:true,
     isSigningUp:false,
+    isLoggingIn:false,
 
     checkAuth :async ()=>{
         try {
@@ -14,7 +15,7 @@ export const useAuthStore = create((set)=>({
             console.log("Auth check response:", res.data);
             
             // Check if response is valid user data (not HTML)
-            if (res.data && typeof res.data === 'object' && res.data._id) {
+            if (res.data && typeof res.data === 'object' && !res.data.message && (res.data._id || res.data.id)) {
                 set({authUser:res.data})
             } else {
                 // If we get HTML or invalid data, user is not authenticated
@@ -34,12 +35,26 @@ export const useAuthStore = create((set)=>({
         try {
             const res = await axiosInstance.post("/auth/signup",data);
             set({authUser:res.data});
-            toast.success("Account Cretaed Sucessfully!")
+            toast.success("Account Created Successfully!")
 
         } catch (error) {
-            toast.error(error.response.data.message);
+            toast.error(error.response?.data?.message || "Signup failed. Please try again.");
         } finally{
             set({isSigningUp:false})
+        }
+    },
+
+    login:async(data)=>{
+        set({isLoggingIn:true})
+        try {
+            const res = await axiosInstance.post("/auth/login",data);
+            set({authUser:res.data});
+            toast.success("Logged in successfully!")
+
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Login failed. Please try again.");
+        } finally{
+            set({isLoggingIn:false})
         }
     }
 }));
