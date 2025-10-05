@@ -1,8 +1,15 @@
 import React from 'react'
 import { MessageCircle, Users, Zap, Shield, Heart, Sparkles } from 'lucide-react'
+import { useChatStore } from '../store/useChatStore'
 import styles from '../styles/NoconversationPlaceholder.module.css'
 
 const NoconversationPlaceholder = () => {
+  const { setActiveTab } = useChatStore()
+
+  const handleStartChatting = () => {
+    // Navigate to contacts tab to start a conversation
+    setActiveTab('contacts')
+  }
   const features = [
     {
       icon: <Zap className={styles.featureIcon} />,
@@ -57,7 +64,10 @@ const NoconversationPlaceholder = () => {
         ))}
       </div>
       
-      <button className={styles.startButton}>
+      <button 
+        className={styles.startButton}
+        onClick={handleStartChatting}
+      >
         Start Chatting
       </button>
     </div>

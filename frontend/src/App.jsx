@@ -31,7 +31,7 @@ function App() {
         <div className="page-content">
           <Routes>
             <Route path="/" element={authUser ? <ChatPage /> : <Navigate to="/auth" replace />} />
-            <Route path="/auth" element={!authUser ? <AuthPage /> : <Navigate to="/" replace />} /> {/** remember to change the chatpage to authpage*/}
+            <Route path="/auth" element={!authUser ? <AuthPage /> : <Navigate to="/" replace />} />
             <Route path="/login" element={<Navigate to="/auth" replace />} />
             <Route path="/signup" element={<Navigate to="/auth" replace />} />
           </Routes>

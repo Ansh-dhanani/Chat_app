@@ -1,10 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useChatStore } from '../store/useChatStore'
+import { useAuthStore } from '../store/useAuthStore'
 import { ArrowLeft, Phone, Video, MoreVertical, Send, Smile } from 'lucide-react'
+import { getInitials, formatMessageTime } from '../utils/helpers'
 import styles from '../styles/ChatContainer.module.css'
 
 const ChatContainer = () => {
   const { selectedUser, messages, sendMessage } = useChatStore()
+  const { authUser } = useAuthStore()
   const [messageText, setMessageText] = useState('')
   const messagesEndRef = useRef(null)
 
@@ -30,25 +33,19 @@ const ChatContainer = () => {
     }
   }, [selectedUser])
 
-  const getInitials = (name) => {
-    return name ? name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'
-  }
-
-  const formatTime = (timestamp) => {
-    return new Date(timestamp).toLocaleTimeString([], { 
-      hour: '2-digit', 
-      minute: '2-digit' 
-    })
-  }
-
-  const handleSendMessage = (e) => {
+  const handleSendMessage = async (e) => {
     e.preventDefault()
     if (messageText.trim() && selectedUser) {
       // TODO: Implement actual message sending
       // TODO: Add message to local state optimistically
       // TODO: Handle message sending errors and retry logic
-      sendMessage({ text: messageText, receiverId: selectedUser._id })
-      setMessageText('')
+      try {
+        await sendMessage({ text: messageText, receiverId: selectedUser._id })
+        setMessageText('')
+      } catch (error) {
+        // Error is already handled by toast in the store
+        return // Don't clear input on error
+      }
     }
   }
 
@@ -105,18 +102,18 @@ const ChatContainer = () => {
           <div
             key={message._id}
             className={`${styles.messageGroup} ${
-              message.senderId === 'currentUser' ? styles.sent : styles.received
+              message.senderId === authUser?._id ? styles.sent : styles.received
             }`}
           >
             <div
               className={`${styles.message} ${
-                message.senderId === 'currentUser' ? styles.sent : styles.received
+                message.senderId === authUser?._id ? styles.sent : styles.received
               }`}
             >
               {message.text}
             </div>
             <div className={styles.messageTime}>
-              {formatTime(message.createdAt)}
+              {formatMessageTime(message.createdAt)}
             </div>
           </div>
         ))}

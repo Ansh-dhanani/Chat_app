@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useChatStore } from '../store/useChatStore'
 import { MessageCircle } from 'lucide-react'
+import { getInitials, formatTime } from '../utils/helpers'
 import styles from '../styles/ChatList.module.css'
 
 const ChatList = () => {
@@ -14,25 +15,7 @@ const ChatList = () => {
   useEffect(() => {
     // TODO: Uncomment when backend is ready
     // getMyChatPartners()
-  }, [])
-
-  const getInitials = (name) => {
-    return name ? name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'
-  }
-
-  const formatTime = (timestamp) => {
-    const date = new Date(timestamp)
-    const now = new Date()
-    const diffInHours = (now - date) / (1000 * 60 * 60)
-    
-    if (diffInHours < 1) {
-      return 'now'
-    } else if (diffInHours < 24) {
-      return `${Math.floor(diffInHours)}h`
-    } else {
-      return date.toLocaleDateString()
-    }
-  }
+  }, [getMyChatPartners])
 
   const handleChatSelect = (user) => {
     setSelectedUser(user)

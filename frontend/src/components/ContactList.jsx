@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useChatStore } from '../store/useChatStore'
 import { Search, Users, UserPlus } from 'lucide-react'
+import { getInitials } from '../utils/helpers'
 import styles from '../styles/ContactList.module.css'
 
 const ContactList = () => {
@@ -15,7 +16,7 @@ const ContactList = () => {
   useEffect(() => {
     // TODO: Uncomment when backend is ready
     // getAllContacts()
-  }, [])
+  }, [getAllContacts])
 
   const getInitials = (name) => {
     return name ? name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'
@@ -86,7 +87,14 @@ const ContactList = () => {
             </div>
           </div>
           
-          <button className={styles.addButton} title="Start chat">
+          <button 
+            className={styles.addButton} 
+            title="Start chat"
+            onClick={(e) => {
+              e.stopPropagation()
+              handleContactSelect(contact)
+            }}
+          >
             <UserPlus size={16} />
           </button>
         </div>

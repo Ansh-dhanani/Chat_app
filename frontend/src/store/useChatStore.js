@@ -10,12 +10,12 @@ export const useChatStore = create((set,get)=>({
     selectedUser : null,
     onlineUsers:[], // Added for contact list
     isUsersLoading:false,
-    isMessaegesLoading:false,
+    isMessagesLoading:false, // Fixed typo: isMessaegesLoading -> isMessagesLoading
     isSoundEnable:localStorage.getItem("isSoundEnable") === "true", // Fixed boolean conversion
 
     toggleSound:()=>{
         const newState = !get().isSoundEnable;
-        localStorage.setItem("isSoundEnabled", newState.toString());
+        localStorage.setItem("isSoundEnable", newState.toString()); // Fixed key mismatch
         set({isSoundEnable: newState});
     },
 
@@ -57,6 +57,7 @@ export const useChatStore = create((set,get)=>({
             return res.data;
         } catch (error) {
             toast.error(error.response?.data?.message || "Failed to send message");
+            throw error; // Re-throw to allow calling code to handle the error
         }
     },
 

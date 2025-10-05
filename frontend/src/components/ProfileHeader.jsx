@@ -1,6 +1,7 @@
 import React from 'react'
 import { useAuthStore } from '../store/useAuthStore'
 import { MoreHorizontal, LogOut } from 'lucide-react'
+import { getInitials } from '../utils/helpers'
 import styles from '../styles/ProfileHeader.module.css'
 
 const ProfileHeader = () => {
@@ -8,10 +9,6 @@ const ProfileHeader = () => {
 
   const handleLogout = () => {
     logout()
-  }
-
-  const getInitials = (name) => {
-    return name ? name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'
   }
 
   return (
