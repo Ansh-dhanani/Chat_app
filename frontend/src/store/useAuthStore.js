@@ -1,5 +1,6 @@
 import {create} from 'zustand';
 import { axiosInstance } from '../lib/axios';
+import { sendWelcomeEmail } from '../lib/emailService';
 import toast from 'react-hot-toast';
 
 export const useAuthStore = create((set)=>({
@@ -35,7 +36,25 @@ export const useAuthStore = create((set)=>({
         try {
             const res = await axiosInstance.post("/auth/signup",data);
             set({authUser:res.data});
-            toast.success("Account Created Successfully!")
+
+            // Send welcome email from frontend (EmailJS works better here)
+            try {
+                console.log("📧 Attempting to send welcome email...");
+                const emailResult = await sendWelcomeEmail(res.data.email, res.data.fullName);
+                
+                if (emailResult.success) {
+                    console.log("✅ Welcome email sent successfully");
+                    toast.success("Account created! Check your email for a welcome message 📧");
+                } else {
+                    console.warn("⚠️ Welcome email failed:", emailResult.error);
+                    toast.success("Account created successfully!");
+                    toast.error(`Failed to send welcome email: ${emailResult.error}`);
+                }
+            } catch (emailError) {
+                console.warn("⚠️ Welcome email failed with exception:", emailError);
+                toast.success("Account created successfully!");
+                toast.error("Failed to send welcome email");
+            }
 
         } catch (error) {
             toast.error(error.response?.data?.message || "Signup failed. Please try again.");
