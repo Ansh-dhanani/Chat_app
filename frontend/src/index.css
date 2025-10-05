@@ -45,9 +45,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom Chat App Styles */
-
-/* Perfect CSS Reset & Foundation */
+/* Global CSS Reset & Foundation */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -82,7 +80,7 @@ body {
   font-family: 'PP Neue Montreal', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* Perfect Background System */
+/* Global Background System */
 .app-background {
   position: fixed;
   top: 0;
@@ -106,7 +104,7 @@ body {
   background-repeat: no-repeat;
 }
 
-/* Perfect Container System */
+/* Global Container System */
 .app-container {
   min-height: 100vh;
   width: 100%;
@@ -127,16 +125,7 @@ body {
   align-items: center;
 }
 
-/* Glassmorphism Card Component */
-.glass-card {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-}
-
-/* Perfect Auth Container */
+/* Auth Container Styles - Kept for AuthForm component */
 .unified-auth-container {
   position: relative;
   background: rgba(255, 255, 255, 0.95);
@@ -345,6 +334,27 @@ body {
   color: #6b7280;
 }
 
+.chat-container{
+  width: 100%;
+  background: transparent;
+  padding: 0;
+  max-width: none;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .app-container {
+    padding: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-container {
+    padding: 0;
+  }
+}
+
 /* Responsive Inputs */
 @media (max-width: 640px) {
   .auth-input {
@@ -444,5 +454,3 @@ body {
     border-radius: 8px;
   }
 }
-
-

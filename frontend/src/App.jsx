@@ -40,14 +40,44 @@ function App() {
       
       {/* Toast notifications */}
       <Toaster 
-        position="top-right"
+        position="top-center"
         toastOptions={{
           duration: 3000,
           style: {
-            background: 'rgba(255, 255, 255, 0.9)',
-            backdropFilter: 'blur(8px)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
+            background: 'rgba(255, 255, 255, 0.95)',
+            backdropFilter: 'blur(16px)',
+            border: '1px solid rgba(255, 255, 255, 0.3)',
             borderRadius: '12px',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1), 0 4px 16px rgba(0, 0, 0, 0.05)',
+            color: '#1e293b',
+            fontFamily: "'PP Neue Montreal', sans-serif",
+            fontWeight: '500',
+            fontSize: '14px',
+            padding: '12px 16px',
+            maxWidth: '400px',
+            textAlign: 'center',
+          },
+          success: {
+            style: {
+              background: 'rgba(16, 185, 129, 0.1)',
+              borderColor: 'rgba(16, 185, 129, 0.3)',
+              color: '#059669',
+            },
+            iconTheme: {
+              primary: '#10b981',
+              secondary: 'rgba(255, 255, 255, 0.9)',
+            },
+          },
+          error: {
+            style: {
+              background: 'rgba(239, 68, 68, 0.1)',
+              borderColor: 'rgba(239, 68, 68, 0.3)',
+              color: '#dc2626',
+            },
+            iconTheme: {
+              primary: '#ef4444',
+              secondary: 'rgba(255, 255, 255, 0.9)',
+            },
           },
         }}
       />

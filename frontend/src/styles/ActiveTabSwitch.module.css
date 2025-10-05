@@ -1,0 +1,77 @@
+/* ActiveTabSwitch Styles */
+.tabSwitch {
+  padding: 1rem;
+  background: rgba(30, 41, 59, 0.8);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.tabContainer {
+  position: relative;
+  display: flex;
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: 12px;
+  padding: 4px;
+  backdrop-filter: blur(8px);
+}
+
+.tabButton {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  color: rgba(148, 163, 184, 0.7);
+  font-weight: 500;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 8px;
+  position: relative;
+  z-index: 2;
+  font-family: 'PP Neue Montreal', sans-serif;
+}
+
+.tabButton.active {
+  color: white;
+  font-weight: 600;
+}
+
+.tabIndicator {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  background: linear-gradient(135deg, #ec4899, #dc2626);
+  border-radius: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 4px 12px rgba(236, 72, 153, 0.3),
+    0 2px 6px rgba(220, 38, 38, 0.2);
+  z-index: 1;
+}
+
+.tabIndicator.chats {
+  left: 4px;
+  width: calc(50% - 4px);
+}
+
+.tabIndicator.contacts {
+  left: 50%;
+  width: calc(50% - 4px);
+}
+
+/* Hover Effects */
+.tabButton:hover:not(.active) {
+  color: rgba(148, 163, 184, 0.9);
+  background: rgba(71, 85, 105, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .tabSwitch {
+    padding: 0.75rem;
+  }
+  
+  .tabButton {
+    padding: 0.625rem 0.75rem;
+    font-size: 0.8125rem;
+  }
+}
