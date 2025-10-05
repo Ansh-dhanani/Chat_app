@@ -5,8 +5,6 @@ import bcrypt from "bcryptjs";
 
 
 export const signup = async (req, res) => {
-  console.log("Signup endpoint hit");
-
   const { fullName, email, password } = req.body;
 
   try {
@@ -44,18 +42,7 @@ export const signup = async (req, res) => {
     if (user) {
       generateToken(user._id, res);
 
-      // Send welcome email (only if enabled)
-      console.log("=== EMAIL SENDING DEBUG ===");
-      console.log("ENABLE_EMAILS:", process.env.ENABLE_EMAILS);
-      console.log("Email enabled check:", process.env.ENABLE_EMAILS === 'true');
-      
-      if (process.env.ENABLE_EMAILS === 'true') {
-        console.log("✅ Emails are enabled - Frontend will handle email sending");
-        // Note: EmailJS works better from frontend - will be handled by client
-      } else {
-        console.log("❌ Emails are disabled in environment");
-      }
-      console.log("==========================");
+      // Note: Welcome emails are handled by frontend using EmailJS
 
       res.status(201).json({
         _id: user._id,

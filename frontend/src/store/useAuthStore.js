@@ -36,24 +36,23 @@ export const useAuthStore = create((set)=>({
         try {
             const res = await axiosInstance.post("/auth/signup",data);
             set({authUser:res.data});
-            toast.success("Account Created Successfully!")
 
             // Send welcome email from frontend (EmailJS works better here)
             try {
                 console.log("📧 Attempting to send welcome email...");
                 const emailResult = await sendWelcomeEmail(res.data.email, res.data.fullName);
                 
-                console.log("📧 Email result:", emailResult);
-                
                 if (emailResult.success) {
                     console.log("✅ Welcome email sent successfully");
-                    toast.success("Welcome email sent! 📧");
+                    toast.success("Account created! Check your email for a welcome message 📧");
                 } else {
                     console.warn("⚠️ Welcome email failed:", emailResult.error);
+                    toast.success("Account created successfully!");
                     toast.error(`Failed to send welcome email: ${emailResult.error}`);
                 }
             } catch (emailError) {
                 console.warn("⚠️ Welcome email failed with exception:", emailError);
+                toast.success("Account created successfully!");
                 toast.error("Failed to send welcome email");
             }
 

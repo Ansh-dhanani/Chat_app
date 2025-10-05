@@ -1,8 +1,11 @@
 import emailjs from '@emailjs/browser';
 
 // Initialize EmailJS with your public key
-const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'itEg3-s2Rtf9WJEwW';
-console.log('🔑 EmailJS public key:', publicKey);
+const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+if (!publicKey) {
+  console.error('❌ VITE_EMAILJS_PUBLIC_KEY is not configured');
+}
 
 emailjs.init(publicKey);
 
@@ -13,13 +16,16 @@ export const sendWelcomeEmail = async (userEmail, userName) => {
       throw new Error('EmailJS public key not configured');
     }
 
-    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'service_yiyds7j';
-    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'template_2g8qrsf';
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
 
-    console.log('📧 EmailJS Configuration:');
-    console.log('- Service ID:', serviceId);
-    console.log('- Template ID:', templateId);
-    console.log('- Public Key:', publicKey);
+    if (!serviceId || !templateId) {
+      throw new Error('EmailJS service ID or template ID not configured');
+    }
+
+    if (import.meta.env.DEV) {
+      console.log('📧 EmailJS Configuration:', { serviceId, templateId });
+    }
 
     const templateParams = {
       email: userEmail,           // Most common parameter for recipient email
@@ -30,7 +36,9 @@ export const sendWelcomeEmail = async (userEmail, userName) => {
     };
 
     console.log('📧 Sending welcome email to:', userEmail);
-    console.log('📧 Template params:', templateParams);
+    if (import.meta.env.DEV) {
+      console.log('📧 Template params:', templateParams);
+    }
     
     const result = await emailjs.send(serviceId, templateId, templateParams);
 
@@ -39,9 +47,6 @@ export const sendWelcomeEmail = async (userEmail, userName) => {
     
   } catch (error) {
     console.error('❌ EmailJS error object:', error);
-    console.error('❌ EmailJS error type:', typeof error);
-    console.error('❌ EmailJS error status:', error.status);
-    console.error('❌ EmailJS error text:', error.text);
     
     // Handle different types of errors
     let errorMessage = 'Unknown error occurred';
