@@ -10,10 +10,7 @@ function App() {
   
   useEffect(() => {
     checkAuth();
-    console.log("checking...")
   }, []);
-
-  console.log("App render - authUser:", authUser, "isCheckingAuth:", isCheckingAuth);
 
   if (isCheckingAuth ) {
     return (

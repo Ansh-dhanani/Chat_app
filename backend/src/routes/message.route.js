@@ -4,6 +4,7 @@ import {
   getChatPartners,
   getMessagesByUserId,
   sendMessage,
+  deleteChat,
 } from "../controllers/message.controller.js";
 import { protectRoute } from "../middlewares/auth.middleware.js";
 import { rateLimiter } from "../middlewares/ratelimit.middleware.js";
@@ -15,5 +16,6 @@ router.get("/contacts", getAllContacts);
 router.get("/chats",getChatPartners);
 router.get("/:id", getMessagesByUserId);
 router.post("/send/:id", sendMessage);
+router.delete("/:id", deleteChat);
 
 export default router;

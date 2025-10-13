@@ -2,6 +2,7 @@ import express from "express";
 import { signup, login, logout, updateProfile } from "../controllers/auth.controller.js";
 import { rateLimiter } from "../middlewares/ratelimit.middleware.js";
 import { protectRoute } from "../middlewares/auth.middleware.js";
+import User from "../models/user.model.js";
 
 const router = express.Router();
 
@@ -18,8 +19,20 @@ router.post("/logout", logout);
 
 router.put("/update-profile",protectRoute,updateProfile)
 
-router.get("/check", protectRoute, (req, res) => {
-    res.status(200).json(req.user);
+router.get("/check", protectRoute, async (req, res) => {
+    try {
+        // Update user online status when checking auth
+        const user = await User.findByIdAndUpdate(
+            req.user._id,
+            { isOnline: true, lastSeen: new Date() },
+            { new: true }
+        ).select("-password");
+        
+        res.status(200).json(user);
+    } catch (error) {
+        console.log("Error in check auth:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
 });
 
 export default router; 

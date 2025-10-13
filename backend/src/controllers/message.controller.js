@@ -99,7 +99,7 @@ export const sendMessage = async (req,res) => {
 
         const newMessage = new Message({
             senderId,
-            receivedId: receiverId,
+            receiverId: receiverId,
             text,
             image: imageUrl,
         })
@@ -142,5 +142,28 @@ export const getChatPartners=async (req,res) => {
     } catch (error) {
         console.error("Error in getChatPartners: ",error.message);
         res.status(500).json({error:"internal server error"});
+    }
+}
+
+export const deleteChat = async (req, res) => {
+    try {
+        const myId = req.user._id;
+        const { id: userToChatId } = req.params;
+
+        // Delete all messages between the two users
+        const result = await Message.deleteMany({
+            $or: [
+                { senderId: myId, receiverId: userToChatId },
+                { senderId: userToChatId, receiverId: myId },
+            ]
+        });
+
+        res.status(200).json({
+            message: "Chat deleted successfully",
+            deletedCount: result.deletedCount
+        });
+    } catch (error) {
+        console.error("Error in deleteChat: ", error.message);
+        res.status(500).json({ error: "Internal server error" });
     }
 }
