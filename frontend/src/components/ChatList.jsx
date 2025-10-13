@@ -11,13 +11,14 @@ const ChatList = () => {
 
   useEffect(() => {
     getMyChatPartners()
-    
+
     // Load click sound
     mouseClickSound.current = new Audio('/mouse-click.mp3')
     mouseClickSound.current.volume = 0.5
     mouseClickSound.current.load()
-  }, [getMyChatPartners])
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // Empty deps - Zustand actions are stable
+  
   const playClickSound = () => {
     if (!isSoundEnabled || !mouseClickSound.current) return
     try {
@@ -36,10 +37,9 @@ const ChatList = () => {
   // Filter conversations based on search query
   const filteredConversations = conversations.filter((chat) => {
     const query = searchQuery.toLowerCase()
-    return (
-      chat.fullName.toLowerCase().includes(query) ||
-      chat.email.toLowerCase().includes(query)
-    )
+    const fullName = (chat.fullName || '').toLowerCase()
+    const email = (chat.email || '').toLowerCase()
+    return fullName.includes(query) || email.includes(query)
   })
 
   if (isUsersLoading) {

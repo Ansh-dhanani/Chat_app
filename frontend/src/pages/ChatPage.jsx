@@ -24,7 +24,8 @@ export const ChatPage = () => {
 
     // Cleanup interval on unmount
     return () => clearInterval(statusInterval);
-  }, [getAllContacts, getMyChatPartners, refreshUserStatuses]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Empty deps - Zustand actions are stable and don't need to be in dependencies
 
   return (
     <div className={styles.chatPageContainer}>

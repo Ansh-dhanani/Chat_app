@@ -87,11 +87,8 @@ const ChatContainer = () => {
     scrollToBottom()
   }, [messages])
 
-  useEffect(() => {
-    if (selectedUser) {
-      getMessages(selectedUser._id)
-    }
-  }, [selectedUser, getMessages])
+  // Messages are fetched when user is selected via setSelectedUser in the store
+  // No need to duplicate the fetch here
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -268,7 +265,6 @@ const ChatContainer = () => {
             className={styles.sendButton}
             disabled={!messageText.trim() || isSendingMessage}
             title="Send message"
-            onClick={playClickSound}
           >
             {isSendingMessage ? '...' : <Send size={18} />}
           </button>

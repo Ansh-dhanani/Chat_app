@@ -53,8 +53,8 @@ const ProfileHeader = () => {
   }
   
   const handleSoundToggle = () => {
-    // Play click sound if enabled
-    if (isSoundEnabled) {
+    // Play click sound if currently enabled and audio is ready
+    if (isSoundEnabled && mouseClickSound.current) {
       mouseClickSound.current.currentTime = 0
       mouseClickSound.current.play().catch(() => {})
     }

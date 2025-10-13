@@ -21,14 +21,22 @@ router.put("/update-profile",protectRoute,updateProfile)
 
 router.get("/check", protectRoute, async (req, res) => {
     try {
-        // Update user online status when checking auth
-        const user = await User.findByIdAndUpdate(
-            req.user._id,
-            { isOnline: true, lastSeen: new Date() },
-            { new: true }
-        ).select("-password");
+        const user = req.user;
         
-        res.status(200).json(user);
+        // Only update if lastSeen is older than 1 minute to reduce database writes
+        const oneMinuteAgo = new Date(Date.now() - 60000);
+        if (!user.lastSeen || user.lastSeen < oneMinuteAgo) {
+            const updatedUser = await User.findByIdAndUpdate(
+                req.user._id,
+                { isOnline: true, lastSeen: new Date() },
+                { new: true }
+            ).select("-password");
+            return res.status(200).json(updatedUser);
+        }
+        
+        // Return existing user data without update
+        const currentUser = await User.findById(req.user._id).select("-password");
+        res.status(200).json(currentUser);
     } catch (error) {
         console.log("Error in check auth:", error);
         res.status(500).json({ message: "Internal server error" });

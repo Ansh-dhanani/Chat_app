@@ -157,34 +157,6 @@ export const useChatStore = create((set, get) => ({
                     }
                 }
             }
-            
-            // Also update selected user from the appropriate list even if viewing chat
-            if (selectedUser && !activeTab) {
-                // Try to find in conversations first
-                let updatedUser = conversations.find(user => user._id === selectedUser._id);
-                
-                // If not found, try contacts
-                if (!updatedUser) {
-                    updatedUser = allContacts.find(user => user._id === selectedUser._id);
-                }
-                
-                // If found, fetch fresh data
-                if (updatedUser) {
-                    set({ selectedUser: updatedUser });
-                } else {
-                    // Fetch fresh user data from contacts API
-                    try {
-                        const res = await axiosInstance.get("/messages/contacts");
-                        const contacts = res.data.users || res.data;
-                        const freshUser = contacts.find(user => user._id === selectedUser._id);
-                        if (freshUser) {
-                            set({ selectedUser: freshUser });
-                        }
-                    } catch (err) {
-                        // Silent fail
-                    }
-                }
-            }
         } catch (error) {
             // Silently fail - this is a background refresh
         }

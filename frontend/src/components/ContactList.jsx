@@ -16,7 +16,8 @@ const ContactList = () => {
     mouseClickSound.current = new Audio('/mouse-click.mp3')
     mouseClickSound.current.volume = 0.5
     mouseClickSound.current.load()
-  }, [getAllContacts])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // Empty deps - Zustand actions are stable
 
   const playClickSound = () => {
     if (!isSoundEnabled || !mouseClickSound.current) return
