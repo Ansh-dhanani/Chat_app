@@ -59,10 +59,10 @@ export const AuthForm = () => {
         <div className="flex items-center justify-center mb-4">
           <img 
             src={logo} 
-            alt="ChatFlow Logo" 
+            alt="chattttz Logo" 
             className="w-9 h-9 object-contain"
           />
-          <h1 className="text-2xl font-bold text-gray-900 ml-3">ChatFlow</h1>
+          <h1 className="text-2xl font-bold text-gray-900 ml-3">chattttz</h1>
         </div>
         <p className="text-gray-600">Sign in to your account or create a new one</p>
       </div>

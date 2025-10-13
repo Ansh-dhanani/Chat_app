@@ -10,8 +10,7 @@ emailjs.init({
 export const emailjsClient = emailjs;
 
 export const emailConfig = {
-  serviceId: process.env.EMAILJS_SERVICE_ID,
-  templateId: process.env.EMAILJS_TEMPLATE_ID,
-  publicKey: process.env.EMAILJS_PUBLIC_KEY,
-  fromName: process.env.EMAIL_FROM_NAME || "ChatFlow App",
+  apiKey: process.env.RESEND_API_KEY,
+  fromName: process.env.EMAIL_FROM_NAME || "chattttz",
+  fromEmail: process.env.EMAIL_FROM || "onboarding@resend.dev",
 };
