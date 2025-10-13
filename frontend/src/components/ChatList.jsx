@@ -1,28 +1,46 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useChatStore } from '../store/useChatStore'
-import { MessageCircle } from 'lucide-react'
+import { MessageCircle, Search } from 'lucide-react'
 import { getInitials, formatTime } from '../utils/helpers'
 import styles from '../styles/ChatList.module.css'
 
 const ChatList = () => {
-  const { conversations, selectedUser, setSelectedUser, getMyChatPartners, isUsersLoading } = useChatStore()
-
-  // TODO: Remove mock data and implement actual conversation fetching
-  // TODO: Call getMyChatPartners() on component mount
-  // TODO: Handle loading states and error states
-  // TODO: Implement real-time conversation updates via WebSocket
+  const { conversations, selectedUser, setSelectedUser, getMyChatPartners, isUsersLoading, isSoundEnabled } = useChatStore()
+  const [searchQuery, setSearchQuery] = useState('')
+  const mouseClickSound = useRef(null)
 
   useEffect(() => {
-    // TODO: Uncomment when backend is ready
-    // getMyChatPartners()
-  }, [getMyChatPartners])
+    getMyChatPartners()
+
+    // Load click sound
+    mouseClickSound.current = new Audio('/mouse-click.mp3')
+    mouseClickSound.current.volume = 0.5
+    mouseClickSound.current.load()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // Empty deps - Zustand actions are stable
+  
+  const playClickSound = () => {
+    if (!isSoundEnabled || !mouseClickSound.current) return
+    try {
+      mouseClickSound.current.currentTime = 0
+      mouseClickSound.current.play().catch(() => {})
+    } catch (error) {
+      // Silently fail
+    }
+  }
 
   const handleChatSelect = (user) => {
+    playClickSound()
     setSelectedUser(user)
   }
 
-  // TODO: Replace with actual conversations from store
-  const chatsToDisplay = conversations || []
+  // Filter conversations based on search query
+  const filteredConversations = conversations.filter((chat) => {
+    const query = searchQuery.toLowerCase()
+    const fullName = (chat.fullName || '').toLowerCase()
+    const email = (chat.email || '').toLowerCase()
+    return fullName.includes(query) || email.includes(query)
+  })
 
   if (isUsersLoading) {
     return (
@@ -33,7 +51,7 @@ const ChatList = () => {
     )
   }
 
-  if (chatsToDisplay.length === 0) {
+  if (conversations.length === 0) {
     return (
       <div className={styles.emptyState}>
         <MessageCircle className={styles.emptyIcon} />
@@ -45,39 +63,53 @@ const ChatList = () => {
 
   return (
     <div className={styles.chatList}>
-      {chatsToDisplay.map((chat) => (
-        <div
-          key={chat._id}
-          className={`${styles.chatItem} ${
-            selectedUser?._id === chat.participant._id ? styles.active : ''
-          }`}
-          onClick={() => handleChatSelect(chat.participant)}
-        >
-          <div className={styles.chatAvatar}>
-            {getInitials(chat.participant.fullName)}
-          </div>
-          
-          <div className={styles.chatInfo}>
-            <div className={styles.chatName}>
-              {chat.participant.fullName}
-            </div>
-            <div className={styles.lastMessage}>
-              {chat.lastMessage?.text || 'No messages yet'}
-            </div>
-          </div>
-          
-          <div className={styles.chatMeta}>
-            <div className={styles.timestamp}>
-              {formatTime(chat.lastMessage?.createdAt)}
-            </div>
-            {chat.unreadCount > 0 && (
-              <div className={styles.unreadBadge}>
-                {chat.unreadCount}
-              </div>
-            )}
-          </div>
+      {/* Search Input */}
+      <div className={styles.searchContainer}>
+        <Search className={styles.searchIcon} size={18} />
+        <input
+          type="text"
+          placeholder="Search chats..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className={styles.searchInput}
+        />
+      </div>
+
+      {/* Chat List */}
+      {filteredConversations.length === 0 ? (
+        <div className={styles.emptyState}>
+          <MessageCircle className={styles.emptyIcon} />
+          <p>No chats found</p>
         </div>
-      ))}
+      ) : (
+        filteredConversations.map((chat) => (
+          <div
+            key={chat._id}
+            className={`${styles.chatItem} ${
+              selectedUser?._id === chat._id ? styles.active : ''
+            }`}
+            onClick={() => handleChatSelect(chat)}
+          >
+            <div className={styles.chatAvatar}>
+              {chat.profilePic ? (
+                <img src={chat.profilePic} alt={chat.fullName} className={styles.avatarImage} />
+              ) : (
+                getInitials(chat.fullName)
+              )}
+              <span className={`${styles.statusIndicator} ${chat.isOnline ? styles.online : styles.offline}`}></span>
+            </div>
+            
+            <div className={styles.chatInfo}>
+              <div className={styles.chatName}>
+                {chat.fullName}
+              </div>
+              <div className={styles.lastMessage}>
+                {chat.email}
+              </div>
+            </div>
+          </div>
+        ))
+      )}
     </div>
   )
 }

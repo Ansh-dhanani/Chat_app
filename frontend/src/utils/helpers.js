@@ -41,3 +41,33 @@ export const formatMessageTime = (timestamp) => {
     minute: '2-digit' 
   })
 }
+
+/**
+ * Get last seen text for offline users
+ * @param {string} lastSeen - ISO timestamp of last seen
+ * @returns {string} - Formatted last seen text
+ */
+export const getLastSeenText = (lastSeen) => {
+  if (!lastSeen) return 'Offline'
+  
+  const now = new Date()
+  const lastSeenDate = new Date(lastSeen)
+  const diffInMs = now - lastSeenDate
+  const diffInMinutes = Math.floor(diffInMs / (1000 * 60))
+  const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60))
+  const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24))
+  
+  if (diffInMinutes < 1) {
+    return 'Last seen just now'
+  } else if (diffInMinutes < 60) {
+    return `Last seen ${diffInMinutes}m ago`
+  } else if (diffInHours < 24) {
+    return `Last seen ${diffInHours}h ago`
+  } else if (diffInDays === 1) {
+    return 'Last seen yesterday'
+  } else if (diffInDays < 7) {
+    return `Last seen ${diffInDays}d ago`
+  } else {
+    return `Last seen ${lastSeenDate.toLocaleDateString()}`
+  }
+}

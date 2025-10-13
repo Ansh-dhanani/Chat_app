@@ -12,7 +12,7 @@
 
 .searchInput {
   width: 100%;
-  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  padding: 0.75rem 2.5rem 0.75rem 2.5rem;
   background: rgba(71, 85, 105, 0.3);
   border: 1px solid rgba(148, 163, 184, 0.2);
   border-radius: 10px;
@@ -44,6 +44,32 @@
   height: 1rem;
 }
 
+.clearButton {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: rgba(148, 163, 184, 0.5);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.clearButton:hover {
+  color: rgba(236, 72, 153, 0.8);
+  background: rgba(236, 72, 153, 0.1);
+}
+
+.clearButton:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
 .contactItem {
   padding: 1rem;
   background: rgba(71, 85, 105, 0.3);
@@ -66,6 +92,8 @@
 .contactAvatar {
   width: 2.5rem;
   height: 2.5rem;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
   border-radius: 50%;
   background: linear-gradient(135deg, #10b981, #059669);
   display: flex;
@@ -75,6 +103,36 @@
   font-weight: 600;
   font-size: 0.875rem;
   flex-shrink: 0;
+  position: relative;
+
+}
+
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.statusIndicator {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  border: 2px solid rgba(30, 41, 59, 0.9);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.statusIndicator.online {
+  background-color: #10b981;
+  box-shadow: 0 0 0 2px rgba(30, 41, 59, 0.9), 0 0 8px rgba(16, 185, 129, 0.6);
+}
+
+.statusIndicator.offline {
+  background-color: #64748b;
 }
 
 .contactInfo {
@@ -88,6 +146,14 @@
   font-size: 0.9rem;
   margin-bottom: 0.25rem;
   font-family: 'PP Neue Montreal', sans-serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.contactEmail {
+  color: rgba(148, 163, 184, 0.7);
+  font-size: 0.8125rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -128,6 +194,7 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0 2px 6px rgba(236, 72, 153, 0.3);
+  flex-shrink: 0;
 }
 
 .addButton:hover {

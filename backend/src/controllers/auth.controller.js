@@ -35,6 +35,8 @@ export const signup = async (req, res) => {
       fullName,
       email,
       password: hashedPassword,
+      isOnline: true,
+      lastSeen: new Date(),
     };
 
     const user = await User.create(userData);
@@ -49,12 +51,13 @@ export const signup = async (req, res) => {
         fullName: user.fullName,
         email: user.email,
         profilePic: user.profilePic,
+        isOnline: user.isOnline,
+        lastSeen: user.lastSeen,
       });
     } else {
       res.status(400).json({ message: "Invalid user data" });
     }
   } catch (error) {
-    console.log("error in signup controller:", error);
     res.status(500).json({ message: "internal server error" });
   }
 };
@@ -77,6 +80,11 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
+    // Set user as online
+    user.isOnline = true;
+    user.lastSeen = new Date();
+    await user.save();
+
     generateToken(user._id, res);
 
     res.status(200).json({
@@ -84,21 +92,34 @@ export const login = async (req, res) => {
       fullName: user.fullName,
       email: user.email,
       profilePic: user.profilePic,
+      isOnline: user.isOnline,
+      lastSeen: user.lastSeen,
     });
   } catch (error) {
-    console.log("Error in login controller:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
 
-export const logout = async (_, res) => {
-  res.clearCookie("jwt", {
-    httpOnly: true,
-    sameSite: "strict",
-    secure: process.env.NODE_ENV === "development" ? false : true,
-  });
-  res.status(200).json({ message: "Logout Successfully" });
-};
+export const logout = async (req, res) => {
+  try {
+    // Set user as offline
+    if (req.user && req.user._id) {
+      await User.findByIdAndUpdate(req.user._id, {
+        isOnline: false,
+        lastSeen: new Date(),
+      });
+    }
+
+    res.clearCookie("jwt", {
+      httpOnly: true,
+      sameSite: "strict",
+      secure: process.env.NODE_ENV === "development" ? false : true,
+    });
+    res.status(200).json({ message: "Logout Successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+};;
 
 export const updateProfile = async (req, res) => {
   try {
@@ -106,18 +127,26 @@ export const updateProfile = async (req, res) => {
     if (!profilePic)
       return res.status(400).json({ message: "Profile pic is required" });
 
-    const userId = res.user._id;
+    const userId = req.user._id;
+    
     const uploadRes = await cloudinary.uploader.upload(profilePic);
 
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { $set: { profilePic: uploadRes.secure_url } },
       { new: true }
-    );
+    ).select("-password");
+    
     if (!updatedUser) {
       return res.status(401).json({ message: "Unauthorized - User not found" });
     }
-    res.status(200).json(updatedUser);
+    
+    res.status(200).json({
+      _id: updatedUser._id,
+      fullName: updatedUser.fullName,
+      email: updatedUser.email,
+      profilePic: updatedUser.profilePic,
+    });
   } catch (error) {
     console.log("Error in Update Profile",error);
     res.status(500).json({message:"Internal Server Error"});
