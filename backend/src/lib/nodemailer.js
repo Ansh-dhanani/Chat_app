@@ -11,8 +11,12 @@ const transporter = nodemailer.createTransporter({
 });
 
 export const emailConfig = {
-  fromName: process.env.EMAIL_FROM_NAME || "ChatFlow App",
-  fromEmail: process.env.GMAIL_USER || 'your-email@gmail.com',
+  host: process.env.EMAIL_HOST || "smtp.gmail.com",
+  port: parseInt(process.env.EMAIL_PORT) || 587,
+  user: process.env.EMAIL_USER,
+  password: process.env.EMAIL_PASSWORD,
+  fromName: process.env.EMAIL_FROM_NAME || "chattttz",
+  fromEmail: process.env.EMAIL_FROM || process.env.EMAIL_USER,
 };
 
 export { transporter };

@@ -21,8 +21,8 @@ export const sendWelcomeEmail = async (userEmail, userName) => {
     const templateParams = {
       email: userEmail,           // Most common parameter for recipient email
       name: userName,             // Most common parameter for recipient name
-      from_name: 'ChatFlow App',
-      app_name: 'ChatFlow',
+      from_name: 'chattttz',
+      app_name: 'chattttz',
       client_url: window.location.origin
     };
     

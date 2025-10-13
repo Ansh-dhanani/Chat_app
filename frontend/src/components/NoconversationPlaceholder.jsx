@@ -43,7 +43,7 @@ const NoconversationPlaceholder = () => {
       </div>
       
       <h2 className={styles.title}>
-        Welcome to ChatFlow
+        Welcome to chattttz
       </h2>
       
       <p className={styles.subtitle}>

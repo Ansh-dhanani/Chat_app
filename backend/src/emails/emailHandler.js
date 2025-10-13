@@ -16,13 +16,11 @@ export const sendWelcomeEmail = async (email, name, clientURL) => {
         console.log(`From Name: ${emailConfig.fromName}`);
 
         // Prepare template parameters for EmailJS
-        const templateParams = {
-            to_email: email,
-            to_name: name,
+                const templateParams = {
+            email: email,
+            name: fullName,
             from_name: emailConfig.fromName,
-            client_url: clientURL || process.env.CLIENT_URL,
-            user_name: name,
-            app_name: "ChatFlow"
+            app_name: "chattttz"
         };
 
         console.log("Template params:", templateParams);
